@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "lib": ["es6", "dom"],
+    "module": "commonjs",
+    "target": "ES6",
+    "outDir": "./build",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "jsx": "react",
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "build/**/*"]
+}

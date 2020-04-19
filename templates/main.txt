@@ -1,0 +1,50 @@
+package main
+
+import (
+	"encoding/json"
+	"log"
+	"net/http"
+	"os"
+	"path/filepath"
+	"time"
+
+	"github.com/gorilla/mux"
+)
+
+type object struct {
+	name string
+	age  int
+}
+
+func main() {
+	dir := "./frontend/dist"
+	r := mux.NewRouter()
+	r.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		path := filepath.Join(dir, r.URL.Path)
+		_, err := os.Stat(path)
+		if os.IsNotExist(err) {
+			http.ServeFile(w, r, filepath.Join(dir, "index.html"))
+			return
+		} else if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		http.ServeFile(w, r, path)
+	})
+
+	api := r.PathPrefix("/api").Subrouter()
+	api.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// Start your api here
+	})
+
+	srv := &http.Server{
+		Handler:      r,
+		Addr:         "127.0.0.1:8080",
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+	log.Println("listening on localhost:8080")
+	log.Fatal(srv.ListenAndServe())
+}
